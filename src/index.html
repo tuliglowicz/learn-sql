@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Math SQL</title>
+    <style>
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        display: block;
+        filter: blur(3px);
+      }
+      #rightNav {
+        position: absolute;
+        width: 20%;
+        top: 0;
+        right: 0;
+        height: 50%;
+      }
+      #editor {
+        display: block;
+        width: 100%;
+        height: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="rightNav">
+      <div id="editor"></div>
+      <button id="exe">Execute</button>
+      <button id="restore">Restore</button>
+    </div>
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/mode-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ext-language_tools.min.js"></script>
+    <script src="consts.js"></script>
+    <script src="data.js"></script>
+    <script src="db.js"></script>
+    <script src="utils.js"></script>
+    <script src="editor.js"></script>
+    <script src="rendering.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
