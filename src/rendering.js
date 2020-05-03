@@ -16,7 +16,7 @@ const geometry = new THREE.BufferGeometry();
 
 const material = new THREE.PointsMaterial({
   size: 0.5,
-  color: 0xFFffFF,
+  color: 0xFFFFFF,
   vertexColors: THREE.VertexColors,
 });
 
@@ -29,12 +29,13 @@ scene.add( points );
 const animate = function () {
   requestAnimationFrame( animate );
 
-  // points.rotation.x += 0.0005 * 2;
-  // points.rotation.y += 0.0001 * 2;
-  // points.rotation.z += 0.0002 * 2;
+  // points.rotation.x += 0.0005;
+  // points.rotation.y += 0.0001;
+  // points.rotation.z += 0.0002;
 
   renderer.render( scene, camera );
 };
-renderer.render( scene, camera );
+
+// renderer.render( scene, camera );
 
 animate();

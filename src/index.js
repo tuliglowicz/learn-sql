@@ -1,13 +1,10 @@
-
+const resultCount = document.getElementById('resultCount');
+const results = document.getElementById('results');
 
 const runSql = (sql, cb = updatePoints) => {
   dbExecute(sql, (_, { rows }) => 
     cb(
-      Array.from(rows).flatMap(itm => ({
-        id: itm.id,
-        coords: [itm.x, itm.y, itm.z],
-        dist: itm.distance,
-      })),
+      Array.from(rows),
       sql === DEFAULT_CODE
   ));
 }
@@ -33,24 +30,40 @@ const getLightColor = ([ x, y, z ]) => {
   return [c, c, c];
 }
 
-const updatePoints = (newPoints, isDefaultSql) => {
-  if (!newPoints || newPoints.length === 0) {
-    return runSql(DEFAULT_CODE);
+const updateTable = allRows => {
+  const table = [];
+  if (allRows.length > 0) {
+    const rows = allRows.slice(0, TAKE_N_FIRST_ROWS);
+    table.push(`<tr><th>#</th><th>${Object.keys(rows[0]).join('</th><th>')}</th></tr>`);
+    rows.forEach((row, idx) => {
+      table.push(`<tr><td>${idx + 1}</td><td>${Object.values(row).join('</td><td>')}</td></tr>`);
+    })
   }
+  results.innerHTML = table.join('');
+};
 
-  const c = newPoints.flatMap(x => colors[x.id] || (colors[x.id] = getColor(x.coords)))
-  console.log(c);
+const updatePoints = (rows, isDefaultSql) => {
 
-  geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( newPoints.flatMap(x => x.coords), 3 ) );
-  geometry.setAttribute( 'color', new THREE.Float32BufferAttribute(c , 3 ) );
+  updateTable(rows);
+
+  resultCount.innerText = rows.length;
+  // if (!rows || rows.length === 0) {
+  //   return runSql(DEFAULT_CODE);
+  // }
+
+  // const c = rows.flatMap(star => [DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR] );
+  const c = rows.flatMap(star => colors[star.starId] = colors[star.starId] || randomOneOf(rgbPerType[star.type || 'M']));
+
+  // console.log(c);
+
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute( rows.flatMap(star => [star.x || 0, star.y  || 0, star.z || 0]), 3 ));
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(c , 3));
   renderer.render( scene, camera );
 }
 
 const reset = () => {
-  editor.setValue(localStorage.getItem('sql') || DEFAULT_CODE);
-  restoreVertices();
-  restoreDB();
-  executeSql();
+  // editor.setValue(DEFAULT_CODE);
+  restoreDB(); // await restoreDB(); execute();
 }
 
 const executeSql = () => {
@@ -59,12 +72,13 @@ const executeSql = () => {
   runSql(sql);
 };
 
-document.getElementById('exe').addEventListener('click', executeSql)
+const resetView = () => {
+  editor.setValue(DEFAULT_CODE);
+  executeSql();
+}
 
-document.getElementById('restore').addEventListener('click', () => {
-  reset();
-  runSql(DEFAULT_CODE);
-})
-
+document.getElementById('exe').addEventListener('click', executeSql);
+document.getElementById('resetQuery').addEventListener('click', resetView);
+document.getElementById('restore').addEventListener('click', reset);
 
 executeSql();

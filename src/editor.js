@@ -1,11 +1,11 @@
 const DEFAULT_CODE = 'select * from stars';
 
-const editorNode = document.getElementById('editor');
+const editorDomElement = document.getElementById('editor');
 
-editorNode.textContent = localStorage.getItem('sql') || DEFAULT_CODE;
+editorDomElement.textContent = localStorage.getItem('sql') || DEFAULT_CODE;
 
 
-var editor = ace.edit(editorNode, {
+var editor = ace.edit(editorDomElement, {
   mode: "ace/mode/sql",
   selectionStyle: "text",
   showGutter: false,
